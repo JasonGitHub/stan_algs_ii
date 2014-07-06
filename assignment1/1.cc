@@ -20,10 +20,11 @@ bool diff(const pair<int, int> &a, const pair<int, int> &b) {
 }
 
 int main() {
-  int n, weight, length;
+  int n;
   cin >> n;
   vector<pair<int, int>> order;
   for (int i = 0; i < n; ++i) {
+    int weight, length;
     cin >> weight >> length;
     order.push_back(make_pair(weight, length));
   }
