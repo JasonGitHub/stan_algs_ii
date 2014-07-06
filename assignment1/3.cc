@@ -17,22 +17,6 @@
 
 using namespace std;
 
-int get_edge_cost(int i, int j, const map<int, vector<pair<int, int> > > &graph) {
-  assert(graph.find(i) != graph.end());
-  auto it = find_if(graph.at(i).begin(), graph.at(i).end(), [&](pair<int, int> val) {return val.first == j;});
-  assert(it != graph.at(i).end());
-  return it->second;
-}
-
-int exist_edge(int i, int j, const map<int, vector<pair<int, int> > > &graph) {
-  if (graph.find(i) == graph.end()) {
-    return false;
-  } else {
-    auto it = find_if(graph.at(i).begin(), graph.at(i).end(), [&](pair<int, int> val) {return val.first == j;});
-    return it != graph.at(i).end();
-  }
-}
-
 int prim(const map<int, vector<pair<int, int> > > &graph) {
   set<int> x, v_x;
   for (auto i = graph.begin(); i != graph.end(); ++i) {
@@ -69,30 +53,38 @@ struct Node {
   }
 };
 
+void update_keys(int target, deque<Node> &v_x, const map<int, vector<pair<int, int> > > &graph) {
+  for (auto i = graph.at(target).begin(); i != graph.at(target).end(); ++i) {
+  	auto it = find_if(v_x.begin(), v_x.end(), [&](Node val){return val.id == i->first;});
+  	if (it != v_x.end()) {
+  		it->cost = min(it->cost, i->second);
+  	}
+  }
+}
+
 int prim_heap(const map<int, vector<pair<int, int> > > &graph) {
   set<int> x;
   deque<Node> v_x;
   int start = -1;
+  // insert nodes into x and v-x
   for (auto i = graph.begin(); i != graph.end(); ++i) {
     if (i == graph.begin()) {
       start = i->first;
       x.insert(start);
     } else {
-      Node tmp(i->first, INT_MAX);
-      if (exist_edge(tmp.id, start, graph)) tmp.cost = get_edge_cost(tmp.id, start, graph);
-      v_x.push_back(tmp);
+      v_x.push_back(Node(i->first, INT_MAX));
     }
   }
+  update_keys(start, v_x, graph);
   make_heap(v_x.begin(), v_x.end(), greater<Node>());
   int sum = 0;
+  // move a node from v-x to x until v-x is empty
   while (!v_x.empty()) {
     Node min_node = v_x.front();
     x.insert(min_node.id);
     v_x.pop_front();
     sum += min_node.cost;
-    for (auto i = v_x.begin(); i != v_x.end(); ++i) {
-      if (exist_edge(min_node.id, i->id, graph)) i->cost = min(get_edge_cost(min_node.id, i->id, graph), i->cost);
-    }
+    update_keys(min_node.id, v_x, graph);
     make_heap(v_x.begin(), v_x.end(), greater<Node>());
   }
   return sum;
@@ -114,6 +106,6 @@ int main() {
     graph[n1].push_back(make_pair(n2, cost));
     graph[n2].push_back(make_pair(n1, cost));
   }
-  cout << prim(graph) << endl;
+  cout << prim_heap(graph) << endl;
   return 0;
 }
