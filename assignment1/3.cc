@@ -55,10 +55,10 @@ struct Node {
 
 void update_keys(int target, deque<Node> &v_x, const map<int, vector<pair<int, int> > > &graph) {
   for (auto i = graph.at(target).begin(); i != graph.at(target).end(); ++i) {
-  	auto it = find_if(v_x.begin(), v_x.end(), [&](Node val){return val.id == i->first;});
-  	if (it != v_x.end()) {
-  		it->cost = min(it->cost, i->second);
-  	}
+    auto it = find_if(v_x.begin(), v_x.end(), [&](Node val){return val.id == i->first;});
+    if (it != v_x.end()) {
+      it->cost = min(it->cost, i->second);
+    }
   }
 }
 
