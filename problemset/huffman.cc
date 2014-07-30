@@ -34,10 +34,10 @@ vector<string> huffman(const vector<double> &p) {
     q.pop();
     q.push(n1 + n2);
     for (auto idx : n1.idxs) {
-      ret[idx].append("0");
+      ret[idx].push_back('0');
     }
     for (auto idx : n2.idxs) {
-      ret[idx].append("1");
+      ret[idx].push_back('1');
     }
   }
   return ret;
