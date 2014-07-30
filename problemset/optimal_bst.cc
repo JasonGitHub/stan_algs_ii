@@ -5,6 +5,8 @@
 #include <limits>
 #include <numeric>
 
+#define _DEBUG_
+
 using namespace std;
 
 double optimal_bst(const vector<double> &p) {
@@ -22,13 +24,16 @@ double optimal_bst(const vector<double> &p) {
       }
     }  
   }
-  // Debug
+
+#ifdef _DEBUG_
   for (int i = 0; i < n; ++i) {
     for (int j = 0; j < n; ++j) {
       cout << setw(6) << a[i][j] << " ";
     }
     cout << endl;
   }
+#endif
+
   return a[0][n - 1];
 }
 
