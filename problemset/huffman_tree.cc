@@ -45,10 +45,18 @@ void dfs(Node* node, string &path) {
   path.pop_back();
 }
 
+void delete_tree(Node* node) {
+  if (node == nullptr) return;
+  delete_tree(node->left);
+  delete_tree(node->right);
+  delete node;
+}
+
 int main() {
   vector<double> p = {0.05, 0.4, 0.08, 0.04, 0.1, 0.1, 0.23};
   Node* root = huffman(p);
   string path;
   dfs(root, path);
+  delete_tree(root);
   return 0;
 }
