@@ -2,7 +2,8 @@
 #include <iomanip>
 #include <limits>
 #include <vector>
-#include <queue>
+#include <deque>
+#include <algorithm>
 
 // #define _DEBUG_
 
@@ -70,6 +71,29 @@ void print(Node* node, string indent, bool is_tail) {
   }
 }
 
+void print_vertical(Node* root) {
+  if (root == nullptr) return;
+  deque<Node*> curr, next;
+  curr.push_back(root);
+  while (!curr.empty() && !all_of(curr.begin(), curr.end(), bind2nd(equal_to<Node*>(), nullptr))) {
+    while (!curr.empty()) {
+      Node* n = curr.front();
+      curr.pop_front();
+      if (n != nullptr) {
+        next.push_back(n->left);
+        next.push_back(n->right);
+        cout << n->val << " ";
+      } else {
+        next.push_back(nullptr);
+        next.push_back(nullptr);
+        cout << "* ";
+      }
+    }
+    cout << endl;
+    swap(curr, next);
+  }
+}
+
 void delete_tree(Node* node) {
   if (node == nullptr) return;
   delete_tree(node->left);
@@ -81,6 +105,7 @@ int main() {
   vector<double> p = {0.05, 0.4, 0.08, 0.04, 0.1, 0.1, 0.23};
   Node* bst = optimal_bst(p);
   print(bst, "", true);
+  print_vertical(bst);
   delete_tree(bst);
   return 0;
 }
